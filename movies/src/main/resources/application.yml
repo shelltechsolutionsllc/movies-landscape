@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: movies
+
+omdb:
+  api:
+    key: 80af670
+
+auth:
+  api:
+    url: http://127.0.0.1:8080/api/v1/auth/
+
+server:
+  port : 8081
