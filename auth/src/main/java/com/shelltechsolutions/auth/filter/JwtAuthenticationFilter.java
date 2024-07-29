@@ -35,8 +35,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwt;
         final String username;
 
+        request.getRequestURI();
+
         // CHECK IF BEARER TOKEN IS IN HEADERS
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ") || request.getRequestURI().equals("/api/v1/auth/isTokenValid")) {
             filterChain.doFilter(request, response);
             return;
         }

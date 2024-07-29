@@ -15,13 +15,18 @@ public class AuthenticationService {
                 .baseUrl(authUrl)
                 .build();
     }
-    public void isAuthorized(String token) {
-        webClient
+    public Boolean isAuthorized(String token) {
+        Token isTokenValid = webClient
                 .get()
-                .uri("tokenCheck")
+                .uri("isTokenValid")
                 .headers(httpHeaders -> httpHeaders.setBearerAuth(token))
                 .retrieve()
-                .bodyToMono(Boolean.class)
+                .bodyToMono(Token.class)
                 .block();
+
+        return isTokenValid.isValid();
+    }
+
+    public record Token(Boolean isValid) {
     }
 }

@@ -11,6 +11,8 @@ import com.shelltechsolutions.auth.jpa.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager manager;
+    private final UserDetailsService userDetailsService;
 
     public AuthenticationResponse register(RegisterRequest request) {
         if (repository.findByUsername(request.getUsername()).isEmpty()) {
@@ -72,6 +75,12 @@ public class AuthenticationService {
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    public Boolean isTokenValid(String authHeader) {
+        var token = authHeader.substring(7);
+        var userDetails = this.userDetailsService.loadUserByUsername(jwtService.extractUsername(token));
+        return jwtService.isTokenValid(token, userDetails);
     }
 
     private void saveUserToken(User user, String jwtToken) {

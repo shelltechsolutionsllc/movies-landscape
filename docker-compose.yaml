@@ -1,0 +1,13 @@
+services:
+  auth:
+    build: ./auth
+    ports:
+      - '8080:8080'
+  api:
+    build: ./movies
+    environment:
+      auth.api.url: http://host.docker.internal:8080/api/v1/auth/
+    ports:
+      - '8081:8081'
+    depends_on:
+      - auth

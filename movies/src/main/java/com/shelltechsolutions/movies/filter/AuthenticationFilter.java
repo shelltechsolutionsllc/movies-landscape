@@ -30,7 +30,11 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        service.isAuthorized(authHeader.substring(7));
+        if (!service.isAuthorized(authHeader.substring(7))) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "The token is not valid.");
+            return;
+        }
+
 
         filterChain.doFilter(request, response);
     }
